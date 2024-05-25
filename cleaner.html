@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Cleaner</title>
+		<style>
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: Cairo, sans-serif;
+				background-color: #f0f0f0;
+			}
+
+			.navbar {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background-color: #007bff;
+				color: white;
+				padding: 10px 0;
+			}
+
+			.navbar a {
+				color: white;
+				text-decoration: none;
+				margin: 0 10px;
+			}
+
+			.navbar a:hover {
+				text-decoration: underline;
+			}
+
+			.texts__container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				margin-top: 20px;
+				padding: 0 20px;
+			}
+
+			.old,
+			.new {
+				width: 100%;
+				margin-bottom: 20px;
+			}
+
+			h2 {
+				font-size: 24px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			textarea {
+				width: 100%;
+				min-height: 150px;
+				padding: 10px;
+				margin-top: 10px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				resize: vertical;
+			}
+
+			button {
+				padding: 10px 20px;
+				background-color: #007bff;
+				color: white;
+				border: none;
+				border-radius: 5px;
+				margin-top: 10px;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: #0056b3;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="navbar">
+			<a href="index.html">PDF Text Extractor</a>
+			<a href="/image.html">Image Text Extractor</a>
+			<a href="/cleaner.html">Text Cleaner</a>
+		</div>
+
+		<div class="texts__container">
+			<div class="old">
+				<h2>Old Text</h2>
+				<button id="old_copy">Copy</button>
+				<button id="old_clear">Clear</button>
+				<textarea name="old" id="old" cols="30" rows="10"></textarea>
+			</div>
+
+			<div class="new">
+				<h2>New Text</h2>
+				<button id="new_copy">Copy</button>
+				<button id="new_clear">Clear</button>
+				<textarea
+					name="new"
+					id="new"
+					cols="30"
+					rows="10"
+					readonly
+				></textarea>
+			</div>
+		</div>
+
+		<script>
+			const oldText = document.getElementById("old");
+			const newText = document.getElementById("new");
+			const clearButton = document.getElementById("old_clear");
+
+			clearButton.addEventListener("click", () => {
+				let arabicText = oldText.value;
+
+				// Replace all non-Arabic characters with spaces
+				arabicText = arabicText.replace(/[^\u0600-\u06FF]/g, " ");
+
+				// Add spaces between Arabic words if there are none
+				arabicText = arabicText.replace(
+					/([^ \u0600-\u06FF])([ \u0600-\u06FF])/g,
+					"$1 $2"
+				);
+
+				// Remove extra spaces
+				arabicText = arabicText.replace(/ +/g, " ");
+
+				newText.value = arabicText;
+			});
+		</script>
+	</body>
+</html>

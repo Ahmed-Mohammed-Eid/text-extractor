@@ -20,90 +20,114 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				justify-content: center;
 				height: 100vh;
 				background-color: #f0f0f0;
 			}
 
+			/* NAVBER */
+			.navbar {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				background-color: #007bff;
+				color: white;
+				width: 100%;
+				padding: 10px 0;
+			}
+
+			.navbar a {
+				color: white;
+				text-decoration: none;
+				margin: 0 10px;
+			}
+
+			.navbar a:hover {
+				text-decoration: underline;
+			}
+
 			/* BAR STYLE */
 
-            .Bar {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                margin-top: 20px;
-            }
+			.Bar {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				margin-top: 20px;
+			}
 
-            .uploader {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                margin-right: 20px;
-            }
+			.uploader {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				margin-right: 20px;
+			}
 
-            .uploader input[type="file"] {
-                display: none;
-            }
+			.uploader input[type="file"] {
+				display: none;
+			}
 
-            .uploader label {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                padding: 10px 20px;
-                background-color: #007bff;
-                color: white;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+			.uploader label {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				padding: 10px 20px;
+				background-color: #007bff;
+				color: white;
+				border-radius: 5px;
+				cursor: pointer;
+			}
 
-            .uploader label img {
-                width: 20px;
-                margin-right: 10px;
-            }
+			.uploader label img {
+				width: 20px;
+				margin-right: 10px;
+			}
 
-            button {
-                padding: 10px 20px;
-                background-color: #007bff;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+			button {
+				padding: 10px 20px;
+				background-color: #007bff;
+				color: white;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+			}
 
-            button:hover {
-                background-color: #0056b3;
-            }
+			button:hover {
+				background-color: #0056b3;
+			}
 
-            #result {
-                margin-top: 20px;
-                padding: 20px;
-                width: 80%;
-                background-color: white;
-                border-radius: 5px;
-                overflow-wrap: break-word;
-                max-width: 80%;
-                white-space: pre-wrap;
-                overflow: auto;
-            }
+			#result {
+				margin-top: 20px;
+				padding: 20px;
+				width: 80%;
+				background-color: white;
+				border-radius: 5px;
+				overflow-wrap: break-word;
+				max-width: 80%;
+				white-space: pre-wrap;
+				overflow: auto;
+			}
 
-            #copy {
-                margin-left: 20px;
-            }
+			#copy {
+				margin-left: 20px;
+			}
 
-            #copy:hover {
-                background-color: #0056b3;
-            }
-
-
+			#copy:hover {
+				background-color: #0056b3;
+			}
 		</style>
 
 		<!-- pdf.js CDN -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
 	</head>
 	<body>
+		<div class="navbar">
+			<a href="index.html">PDF Text Extractor</a>
+			<a href="/image.html">Image Text Extractor</a>
+			<a href="/cleaner.html">Text Cleaner</a>
+		</div>
 		<h1>PDF Text Extractor</h1>
 		<div class="Bar">
 			<div class="uploader">
