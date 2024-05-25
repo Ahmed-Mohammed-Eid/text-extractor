@@ -131,6 +131,27 @@
 
 				newText.value = arabicText;
 			});
+
+            document.getElementById("old_copy").addEventListener("click", () => {
+                oldText.select();
+                document.execCommand("copy");
+                alert("Text copied to clipboard.");
+            });
+
+            document.getElementById("new_copy").addEventListener("click", () => {
+                newText.select();
+                document.execCommand("copy");
+                alert("Text copied to clipboard.");
+            });
+
+
+            document.getElementById("old_clear").addEventListener("click", () => {
+                oldText.value = "";
+            });
+
+            document.getElementById("new_clear").addEventListener("click", () => {
+                newText.value = "";
+            });
 		</script>
 	</body>
 </html>
