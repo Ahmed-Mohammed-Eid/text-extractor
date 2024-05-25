@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Text Extractor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: Cairo, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .file-uploader {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .file-uploader input[type="file"] {
+            display: none;
+        }
+
+        .file-uploader label {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        button {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            width: 80%;
+            overflow-wrap: break-word;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #copy {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #copy:hover {
+            background-color: #0056b3;
+        }
+
+        #copy {
+            margin-right: 10px;
+        }
+
+        #result {
+            max-width: 80%;
+            white-space: pre-wrap;
+            overflow: auto;
+            direction: rtl;
+            text-align: right;
+        }
+
+
+    </style>
+    <!-- Tesseract.js CDN -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.3.0/dist/tesseract.min.js"></script> -->
+    <script src="./tesseract.min.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <h1 class="title">
+            Image Text Extractor
+        </h1>
+
+        <div class="file-uploader">
+            <input type="file" id="image-upload" accept="image/*">
+            <label for="image-upload">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-file-image"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M0 1.5A1.5 1.5 0 0 1 1.5 0h12A1.5 1.5 0 0 1 15 1.5v12a1.5 1.5 0 0 1-1.5 1.5H1.5A1.5 1.5 0 0 1 0 13.5v-12ZM1.5 1A.5.5 0 0 0 1 1.5v12a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5v-12a.5.5 0 0 0-.5-.5H1.5Z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M4.5 4a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-.5.5h-6a.5.5 0 0 1-.5-.5v-6Z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M8 5.5a2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5 2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5Zm0 1a1.5 1.5 0 0 0-1.5 1.5 1.5 1.5 0 0 0 1.5 1.5 1.5 1.5 0 0 0 1.5-1.5 1.5 1.5 0 0 0-1.5-1.5Z"
+                    />
+                </svg>
+                Choose Image
+            </label>
+        </div>
+
+        <div class="actions">
+            <button id="extract-btn">
+                <!-- SVG -->
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-file-earmark-text"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5a.5.5 0 0 0-.5-.5H10a2 2 0 0 1-2-2V0z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M10 0v2h2.5a.5.5 0 0 1 .5.5V4h2a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V0z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M4 2a.5.5 0 0 1 .5-.5H6v2H4V2z"
+                    />
+                </svg>
+                Extract Text
+            </button>
+            <button id="clear-btn">
+                <!-- SVG -->
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-x-circle"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM4.354 4.354a.5.5 0 0 1 0 .708L7.293 8l-2.94 2.94a.5.5 0 1 1-.708-.707L6.586 8 3.646 4.354a.5.5 0 0 1 .708-.708L8 6.586l3.646-3.646a.5.5 0 0 1 .708.708L9.414 8l2.94 2.94a.5.5 0 0 1-.708.707L8 9.414l-3.646 3.646a.5.5 0 0 1-.708-.708L6.586 8 3.646 4.354a.5.5 0 0 1 .708-.708Z"
+                    />
+                </svg>
+                Clear
+            </button>
+            <button id="copy">
+                <!-- SVG -->
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-clipboard"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M5.5 1a.5.5 0 0 1 .5.5V2h4V1.5a.5.5 0 0 1 1 0V2h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h1V1.5a.5.5 0 0 1 .5-.5Z"
+                    />
+                    <path
+                        fill-rule="evenodd"
+                        d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5V3H4v-.5Z"
+                    />
+                </svg>
+                Copy
+            </button>
+        </div>
+    </nav>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('extract-btn').addEventListener('click', async () => {
+            const fileInput = document.getElementById('image-upload');
+            if (fileInput.files.length === 0) {
+                alert('Please choose an image file first.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const { data } = await Tesseract.recognize(file, 'ara+eng', { logger: m => {
+                // Show progress in the extract button next to the text "Extract Text" as a percentage
+                if (m.status === 'recognizing text') {
+                    document.getElementById('extract-btn').textContent = `Extract Text (${Number(m.progress.toFixed(2) * 100).toFixed(2)}%)`;
+                }
+            } });
+
+            document.getElementById('result').textContent = data.text;
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', () => {
+            document.getElementById('result').textContent = '';
+        });
+
+        document.getElementById('copy').addEventListener('click', () => {
+            const result = document.getElementById('result');
+            const range = document.createRange();
+            range.selectNode(result);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Text copied to clipboard.');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>PDF Text Extractor</title>
+		<style>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				padding: 0;
+				margin: 0;
+			}
+
+			body {
+				font-family: Cairo, sans-serif;
+				margin: 0;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				background-color: #f0f0f0;
+			}
+
+			/* BAR STYLE */
+
+            .Bar {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+            .uploader {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                margin-right: 20px;
+            }
+
+            .uploader input[type="file"] {
+                display: none;
+            }
+
+            .uploader label {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .uploader label img {
+                width: 20px;
+                margin-right: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+            #result {
+                margin-top: 20px;
+                padding: 20px;
+                width: 80%;
+                background-color: white;
+                border-radius: 5px;
+                overflow-wrap: break-word;
+                max-width: 80%;
+                white-space: pre-wrap;
+                overflow: auto;
+            }
+
+            #copy {
+                margin-left: 20px;
+            }
+
+            #copy:hover {
+                background-color: #0056b3;
+            }
+
+
+		</style>
+
+		<!-- pdf.js CDN -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+	</head>
+	<body>
+		<h1>PDF Text Extractor</h1>
+		<div class="Bar">
+			<div class="uploader">
+				<input type="file" id="pdf-upload" accept="application/pdf" />
+				<label for="pdf-upload">
+					<img src="./pdf-svgrepo-com.svg" alt="PDF icon" />
+					Choose a PDF file
+				</label>
+			</div>
+			<button id="extract-btn">Extract Text</button>
+			<!-- COPY BUTTON -->
+			<button id="copy" onclick="copyToClipboard()">Copy</button>
+		</div>
+		<div id="result"></div>
+
+		<script>
+			function copyToClipboard() {
+				const result = document.getElementById("result");
+				const range = document.createRange();
+				range.selectNode(result);
+				window.getSelection().removeAllRanges();
+				window.getSelection().addRange(range);
+				document.execCommand("copy");
+				window.getSelection().removeAllRanges();
+				alert("Text copied to clipboard.");
+			}
+			document
+				.getElementById("extract-btn")
+				.addEventListener("click", () => {
+					const fileInput = document.getElementById("pdf-upload");
+					if (fileInput.files.length === 0) {
+						alert("Please choose a PDF file first.");
+						return;
+					}
+
+					const file = fileInput.files[0];
+					const fileReader = new FileReader();
+
+					fileReader.onload = async function () {
+						const typedArray = new Uint8Array(this.result);
+						const loadingTask = pdfjsLib.getDocument(typedArray);
+						const pdf = await loadingTask.promise;
+						let fullText = "";
+
+						for (
+							let pageNum = 1;
+							pageNum <= pdf.numPages;
+							pageNum++
+						) {
+							const page = await pdf.getPage(pageNum);
+							const textContent = await page.getTextContent();
+							const pageText = textContent.items
+								.map((item) => item.str)
+								.join(" ");
+							fullText += pageText + "\n";
+						}
+
+						document.getElementById("result").textContent =
+							fullText;
+					};
+
+					fileReader.readAsArrayBuffer(file);
+				});
+		</script>
+	</body>
+</html>
